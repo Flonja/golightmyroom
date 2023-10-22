@@ -3,8 +3,6 @@ package models
 import (
 	"encoding/binary"
 	"errors"
-	"fmt"
-	_ "github.com/lucasb-eyer/go-colorful"
 	"image/color"
 	"math"
 	"tinygo.org/x/bluetooth"
@@ -111,7 +109,6 @@ func (c *CenturaColorSpot) getGamut() *Gamut {
 
 func (c *CenturaColorSpot) Color() color.Color {
 	byteColor := c.mustReadCharacteristics("932c32bd-0005-47a2-835a-a8d455b859dd")
-	fmt.Printf("%#v %#v\n", byteColor[0:2], byteColor[2:4])
 	x := float64(binary.LittleEndian.Uint16(byteColor[0:2])) / 0xffff
 	y := float64(binary.LittleEndian.Uint16(byteColor[2:4])) / 0xffff
 	return c.getGamut().XYYToColor(XYPoint{x, y}, float64(c.Brightness())/255)
