@@ -82,7 +82,7 @@ func (c *CenturaColorSpot) Brightness() byte {
 }
 
 func (c *CenturaColorSpot) SetBrightness(b byte) {
-	c.mustWriteCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd", []byte{byte(math.Min(math.Max(float64(b), 1), 254))})
+	c.mustWriteCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd", []byte{byte(min(max(float64(b), 1), 254))})
 }
 
 func (c *CenturaColorSpot) Model() string {
