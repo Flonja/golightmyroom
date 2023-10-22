@@ -108,9 +108,9 @@ func (c *CenturaColorSpot) getGamut() *Gamut {
 }
 
 func (c *CenturaColorSpot) Color() color.Color {
-	byteColor := c.mustReadCharacteristics("932c32bd-0005-47a2-835a-a8d455b859dd")
-	x := float64(binary.LittleEndian.Uint16(byteColor[0:2])) / 0xffff
-	y := float64(binary.LittleEndian.Uint16(byteColor[2:4])) / 0xffff
+	bits := c.mustReadCharacteristics("932c32bd-0005-47a2-835a-a8d455b859dd")
+	x := float64(binary.LittleEndian.Uint16(bits[0:2])) / 0xffff
+	y := float64(binary.LittleEndian.Uint16(bits[2:4])) / 0xffff
 	return c.getGamut().XYYToColor(XYPoint{x, y}, float64(c.Brightness())/255)
 }
 
@@ -118,8 +118,7 @@ func (c *CenturaColorSpot) SetColor(colour color.Color) {
 	xy := c.getGamut().ColorToXY(colour)
 	xBits := uint16(xy[0] * 0xffff)
 	yBits := uint16(xy[1] * 0xffff)
-	written := []byte{byte(xBits), byte(xBits >> 8), byte(yBits), byte(yBits >> 8)}
-	c.mustWriteCharacteristics("932c32bd-0005-47a2-835a-a8d455b859dd", written)
+	c.mustWriteCharacteristics("932c32bd-0005-47a2-835a-a8d455b859dd", []byte{byte(xBits), byte(xBits >> 8), byte(yBits), byte(yBits >> 8)})
 }
 
 func (c *CenturaColorSpot) Name() string {
