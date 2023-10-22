@@ -6,8 +6,8 @@ type Light interface {
 	On()
 	Off()
 	Powered() bool
-	Brightness() byte
-	SetBrightness(byte)
+	Brightness() float64
+	SetBrightness(float64)
 	Model() string
 }
 

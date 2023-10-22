@@ -77,12 +77,12 @@ func (c *CenturaColorSpot) Powered() bool {
 	return c.mustReadCharacteristics("932c32bd-0002-47a2-835a-a8d455b859dd")[0] == 1
 }
 
-func (c *CenturaColorSpot) Brightness() byte {
-	return c.mustReadCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd")[0]
+func (c *CenturaColorSpot) Brightness() float64 {
+	return float64(c.mustReadCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd")[0]) / 254
 }
 
-func (c *CenturaColorSpot) SetBrightness(b byte) {
-	c.mustWriteCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd", []byte{byte(min(max(float64(b), 1), 254))})
+func (c *CenturaColorSpot) SetBrightness(b float64) {
+	c.mustWriteCharacteristics("932c32bd-0003-47a2-835a-a8d455b859dd", []byte{byte(min(max(b*254, 1), 254))})
 }
 
 func (c *CenturaColorSpot) Model() string {
