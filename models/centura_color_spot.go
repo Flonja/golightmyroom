@@ -89,14 +89,13 @@ func (c *CenturaColorSpot) Model() string {
 	return string(c.mustReadCharacteristics("00002a24-0000-1000-8000-00805f9b34fb"))
 }
 
-func (c *CenturaColorSpot) White() color.Color {
-	//TODO implement me
-	panic("implement me")
+func (c *CenturaColorSpot) Temperature() uint16 {
+	return uint16(math.Round(1e6 / float64(binary.LittleEndian.Uint16(c.mustReadCharacteristics("932c32bd-0004-47a2-835a-a8d455b859dd")))))
 }
 
-func (c *CenturaColorSpot) SetWhite(color color.Color) {
-	//TODO implement me
-	panic("implement me")
+func (c *CenturaColorSpot) SetTemperature(temperature uint16) {
+	rawTemp := max(153, min(uint16(math.Round(1e6/float64(temperature))), 500))
+	c.mustWriteCharacteristics("932c32bd-0004-47a2-835a-a8d455b859dd", []byte{byte(rawTemp), byte(rawTemp >> 8)})
 }
 
 func (c *CenturaColorSpot) getGamut() *Gamut {

@@ -11,9 +11,9 @@ type Light interface {
 	Model() string
 }
 
-type WhiteControl interface {
-	White() color.Color
-	SetWhite(color.Color)
+type TemperatureControl interface {
+	Temperature() uint16
+	SetTemperature(uint16)
 }
 
 type ColorControl interface {
