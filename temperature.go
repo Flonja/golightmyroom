@@ -1,4 +1,4 @@
-package main
+package golightmyroom
 
 const (
 	TemperatureDefault    = 2732
