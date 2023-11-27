@@ -48,7 +48,7 @@ func (c *CenturaColorSpot) mustReadCharacteristics(characteristic string) (buf [
 	char := c.findCharacteristic(characteristic)
 
 	maxTries := 5
-	for maxTries < 0 {
+	for maxTries > 0 {
 		buf = make([]byte, 512)
 		n, err := char.Read(buf)
 		if err != nil {
@@ -70,7 +70,7 @@ func (c *CenturaColorSpot) mustWriteCharacteristics(characteristic string, buf [
 	char := c.findCharacteristic(characteristic)
 
 	maxTries := 5
-	for maxTries < 0 {
+	for maxTries > 0 {
 		if _, err := char.WriteWithoutResponse(buf); err != nil {
 			fmt.Printf("couldn't write to light: %v\n", err)
 			maxTries--
