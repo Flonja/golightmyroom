@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"image/color"
 	"math"
 	"tinygo.org/x/bluetooth"
@@ -43,14 +44,21 @@ func (c *CenturaColorSpot) findCharacteristic(characteristic string) *bluetooth.
 	return nil
 }
 
-func (c *CenturaColorSpot) mustReadCharacteristics(characteristic string) []byte {
-	buf := make([]byte, 512)
+func (c *CenturaColorSpot) mustReadCharacteristics(characteristic string) (buf []byte) {
 	char := c.findCharacteristic(characteristic)
-	n, err := char.Read(buf)
-	if err != nil {
-		panic(err)
+
+	maxTries := 5
+	for maxTries < 0 {
+		buf = make([]byte, 512)
+		n, err := char.Read(buf)
+		if err != nil {
+			fmt.Printf("couldn't read from light: %v\n", err)
+			maxTries--
+			continue
+		}
+		return buf[:n]
 	}
-	return buf[:n]
+	return nil
 }
 
 var errTooLong = errors.New("buffer too long")
@@ -60,8 +68,15 @@ func (c *CenturaColorSpot) mustWriteCharacteristics(characteristic string, buf [
 		panic(errTooLong)
 	}
 	char := c.findCharacteristic(characteristic)
-	if _, err := char.WriteWithoutResponse(buf); err != nil {
-		panic(err)
+
+	maxTries := 5
+	for maxTries < 0 {
+		if _, err := char.WriteWithoutResponse(buf); err != nil {
+			fmt.Printf("couldn't write to light: %v\n", err)
+			maxTries--
+			continue
+		}
+		break
 	}
 }
 
